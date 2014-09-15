@@ -100,8 +100,24 @@ class Captcha
         'red',
         'white',
         'blackglass',
-        'clean'
+        'clean',
+        'custom'
     );
+
+    /**
+     * A string with name of custom theme.
+     *
+     * @var string
+     * @see https://developers.google.com/recaptcha/docs/customization
+     */
+    protected $customTheme = null;
+
+    /**
+     * HTML for the custom theme.
+     *
+     * @var string
+     */
+    protected $customThemeHTML = null;
 
     /**
      * Set public key
@@ -180,7 +196,7 @@ class Captcha
      */
     public function setError($error)
     {
-        $this->error = (string) $error;
+        $this->error = (string)$error;
         return $this;
     }
 
@@ -288,7 +304,7 @@ class Captcha
         // Properly encode parameters
         $parameters = $this->encode($parameters);
 
-        $request  = "POST /recaptcha/api/verify HTTP/1.0\r\n";
+        $request = "POST /recaptcha/api/verify HTTP/1.0\r\n";
         $request .= "Host: " . self::VERIFY_SERVER . "\r\n";
         $request .= "Content-Type: application/x-www-form-urlencoded;\r\n";
         $request .= "Content-Length: " . strlen($parameters) . "\r\n";
@@ -304,7 +320,7 @@ class Captcha
 
         $response = '';
 
-        while (!feof($socket) ) {
+        while (!feof($socket)) {
             $response .= fgets($socket, 1160);
         }
 
@@ -329,7 +345,7 @@ class Captcha
             }
         }
 
-        $uri = substr($uri, 0, strlen($uri)-1);
+        $uri = substr($uri, 0, strlen($uri) - 1);
 
         return $uri;
     }
@@ -342,7 +358,7 @@ class Captcha
      */
     protected static function isValidTheme($theme)
     {
-        return (bool) in_array($theme, self::$themes);
+        return (bool)in_array($theme, self::$themes);
     }
 
     /**
@@ -361,6 +377,30 @@ class Captcha
         }
 
         $this->theme = $theme;
+    }
+
+    public function setCustomTheme($customTheme)
+    {
+        if (!is_string($customTheme)) {
+            throw new Exception(
+                "CustomTheme must be a string"
+            );
+        }
+
+        $this->customTheme = $customTheme;
+
+    }
+
+    public function setCustomThemeHTML($html)
+    {
+        if (!is_string($html)) {
+            throw new Exception(
+                "CustomThemeHTML must be a string"
+            );
+        }
+
+        $this->customThemeHTML = $html;
+
     }
 }
 
