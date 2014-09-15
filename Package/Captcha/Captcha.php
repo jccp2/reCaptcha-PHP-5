@@ -228,8 +228,10 @@ class Captcha
 
         // If user specified a reCaptcha theme, output it as one of the options
         if ($this->theme) {
-            $theme = '<script> var RecaptchaOptions = {theme: "' . $this->theme . '"};</script>';
+            $theme = '<script> var RecaptchaOptions = {theme: "' . $this->theme . '"' . (($this->customTheme) ? ', custom_theme_widget: "' . $this->customTheme : "") . '"};</script>';
         }
+
+        $theme .= (($this->customThemeHTML) ? $this->customThemeHTML : "");
 
         return $theme . '<script type="text/javascript" src="' . self::SERVER . '/challenge?k=' . $this->getPublicKey() . $error . '"></script>
 
@@ -403,4 +405,3 @@ class Captcha
 
     }
 }
-
